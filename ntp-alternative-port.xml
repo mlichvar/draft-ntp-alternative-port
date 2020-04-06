@@ -100,22 +100,28 @@
     </section>
 
     <section title="Alternative port">
-      <t>The port TBD is an alternative port for NTP. The format of NTP packets
-        send from or to this port is not changed. The port MAY be used in modes
-        1 (active), 2 (passive), 3 (client), 4 (server), and 5 (broadcast). The
-        port MUST NOT be used in modes 0 (unspecified), 6 (control), and 7
-        (private).</t>
+      <t>The port TBD is an alternative port for NTP. The protocol and the
+        format of NTP packets sent from or to this port is unchanged. The
+        port MAY be used in modes 1 (active), 2 (passive), 3 (client), 4
+        (server), and 5 (broadcast). The port MUST NOT be used in modes 0
+        (unspecified), 6 (control), and 7 (private).</t>
 
-      <t>An NTP server SHOULD listen to requests on both ports 123 and TBD. It
-        MUST respond from the same port which received the request. If it
-        receives on the port TBD a packet in one of the modes which are not
-        allowed, the packet MUST be discarded without responding.</t>
+      <t>An NTP server SHOULD receive requests on both the original NTP port
+        (123) and the alternative port (TBD). It MUST respond from the same
+        port which received the request. If a request is received on the
+        alternative port in a mode which is not allowed on this port, the
+        request MUST be discarded with no response.</t>
 
-      <t>An NTP client SHOULD send requests to only one port at a time. If no
-        response is received (for how many requests?) it SHOULD switch to the
-        other port.</t>
+      <t>When an NTP client is started, it SHOULD send the first request to the
+        alternative port. The client SHOULD be switching between the two ports
+        until a valid response is received. The client MAY send a limited
+        number of requests to both ports at the same time in order to speed up
+        the discovery of the responding port. When both ports are responding,
+        the client SHOULD prefer the alternative port.</t>
 
-      <t>What about the NTS-KE port negotiation?</t>
+      <t>An NTP server which supports NTS SHOULD include the NTPv4 Port Negotiation
+        record in NTS-KE responses to specify the alternative port as the port
+        to which the client should send NTP requests.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">

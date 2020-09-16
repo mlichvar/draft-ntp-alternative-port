@@ -17,7 +17,7 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 
-<rfc category="std" docName="draft-mlichvar-ntp-alternative-port-01" updates="5905" ipr="trust200902">
+<rfc category="std" docName="draft-mlichvar-ntp-alternative-port-02" updates="5905" ipr="trust200902">
   <front>
     <title>Alternative NTP port</title>
 
@@ -35,7 +35,7 @@
       </address>
     </author>
 
-    <date year="2020" month="Jun" day="09"/>
+    <date year="2020" month="Sep" day="16"/>
 
     <area>General</area>
 

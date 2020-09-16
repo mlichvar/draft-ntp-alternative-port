@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC1305 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1305.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC5906 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5906.xml">
+<!ENTITY RFC6335 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6335.xml">
 <!ENTITY MODE6 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-mode-6-cmds.xml">
 <!ENTITY NTS SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-using-nts-for-ntp.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <?rfc strict="yes"?>
-<?rfc toc="no"?>
+<?rfc toc="yes"?>
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 
-<rfc category="std" docName="draft-mlichvar-ntp-alternative-port-01" updates="RFC5905" ipr="trust200902">
+<rfc category="std" docName="draft-mlichvar-ntp-alternative-port-01" updates="5905" ipr="trust200902">
   <front>
     <title>Alternative NTP port</title>
 
@@ -43,18 +44,20 @@
     <keyword>NTP</keyword>
 
     <abstract>
-      <t>This document specifies an alternative port for the Network Time
-        Protocol (NTP) which is restricted in the supported modes and
-        extensions to not allow traffic amplification in order to make NTP safe
-        for the Internet.</t>
+      <t>This document updates RFC 5905 to specify an alternative port for the
+        Network Time Protocol (NTP) which is restricted to NTP messages that do
+        not allow traffic amplification in order to make NTP safe for the
+        Internet.
+      </t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
       <t>There are several modes specified for NTP. NTP packets in versions
-        2, 3, and 4 have a 3-bit field for the mode. Modes 1, 2, 3, 4, and 5
-        are used for synchronization of clocks. They are specified in <xref
+        2, 3, and 4 have a 3-bit field for the mode. Modes 1 (active), 2
+        (passive), 3 (client), 4 (server), and 5 (broadcast) are used for
+        synchronization of clocks. They are specified in <xref
           target="RFC5905">RFC 5905</xref>. Modes 6 and 7 are used for other
         purposes, like monitoring and remote management of NTP servers and
             clients. The mode 6 is specified in <xref
@@ -96,59 +99,118 @@
         clocks in networks where the port 123 is blocked or rate limited.</t>
 
       <section title="Requirements Language">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-          "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-          document are to be interpreted as described in <xref
-            target="RFC2119">RFC 2119</xref>.</t>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+          NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+          "MAY", and "OPTIONAL" in this document are to be interpreted as
+          described in BCP 14 <xref target="RFC2119"/>
+          <xref target="RFC8174"/> when, and only when, they appear in all
+          capitals, as shown here.</t>
       </section>
     </section>
 
-    <section title="Alternative port">
-      <t>The port TBD is an alternative port for NTP. The protocol and the
-        format of NTP packets sent from and to this port is unchanged. Both
-        NTP requests and responses MAY be sent from the port. An NTP packet
-        MUST NOT be sent from the alternative port if it is a response which
-        has a longer UDP payload than the request, or the number of NTP packets
-        in a single response is larger than one.</t>
+    <section title="Alternative port - update to RFC 5905">
+      <t>The table in "Figure 6: Global Parameters" in Section 7.2 of <xref
+        target="RFC5905"/> is extended with:</t>
 
-      <t>In NTP versions 2, 3, and 4, only modes 1 (active), 2 (passive), 3
-        (client), 4 (server), and 5 (broadcast) are generally usable on this
-        port.</t>
+      <texttable>
+        <ttcol>Name</ttcol>
+        <ttcol>Value</ttcol>
+        <ttcol>Description</ttcol>
+        <c>ALTPORT</c>
+        <c>TBD</c>
+        <c>Alternative NTP port</c>
+      </texttable>
 
-      <t>An NTP server SHOULD receive requests in the client mode on both the
-        original NTP port (123) and the alternative port (TBD). If it responds,
-        it MUST send the response from the port which received the request.
-        If the server supports any extension fields in NTP packets, it MUST
-        verify that each response is not larger than the request, even if the
-        number of extension fields is constant and they have a constant
-        length.</t>
+      <t>The following text from Section 9.1 of <xref target="RFC5905"/>:</t>
 
-      <t>When an NTP client is started, it SHOULD send the first request to the
-        alternative port. The client SHOULD be switching between the two ports
-        until a valid response is received. The client MAY send a limited
-        number of requests to both ports at the same time in order to speed up
-        the discovery of the responding port. When both ports are responding,
-        the client SHOULD prefer the alternative port.</t>
+      <t><list>
+        <t>srcport: UDP port number of the server or reference clock. This
+          becomes the destination port number in packets sent from this
+          association. When operating in symmetric modes (1 and 2), this field
+          must contain the NTP port number PORT (123) assigned by the IANA. In
+          other modes, it can contain any number consistent with local
+          policy.</t>
+      </list></t>
 
-      <t>An NTP server which supports NTS SHOULD include the NTPv4 Port Negotiation
-        record in NTS-KE responses to specify the alternative port as the port
-        to which the client should send NTP requests.</t>
+      <t>is replaced with:</t>
 
-      <t>In the symmetric modes (active and passive) NTP packets are considered
-        to be requests and responses at the same time. Therefore, the peers
-        MUST send packets with an equal length in order to synchronize with
-        each other. The peers MAY use different polling intervals (packets sent
-        at subsequent polls are considered to be separate requests and
-        responses).</t>
+      <t><list>
+        <t>srcport: UDP port number of the server or reference clock. This
+          becomes the destination port number in packets sent from this
+          association. When operating in symmetric modes (1 and 2), this field
+          must contain the NTP port number PORT (123) or the alternative NTP
+          port ALTPORT (TBD) assigned by the IANA. In other modes, it can
+          contain any number consistent with local policy.</t>
+      </list></t>
+
+      <t>The following text is added to the Section 9.1:</t>
+
+      <t><list>
+        <t>The port ALTPORT (TBD) is an alternative port to the port PORT
+          (123). The protocol and the format of NTP packets sent from and to
+          this port is unchanged. Both NTP requests and responses MAY be sent
+          from the alternative port. An NTP packet MUST NOT be sent from the
+          alternative port if it is a response which has a longer UDP payload
+          than the request, or the number of NTP packets in a single response
+          is larger than one.</t>
+
+        <t>Only modes 1 (active), 2 (passive), 3 (client), 4 (server), and 5
+          (broadcast) are generally usable on this port.</t>
+
+        <t>An NTP server SHOULD receive requests in the client mode on both the
+          PORT (123) and ALTPORT (TBD) ports. If it responds, it MUST send the
+          response from the port which received the request. If the server
+          supports any extension fields in NTP packets, it MUST verify that
+          each response is not larger than the request, even if the number of
+          extension fields is constant and they have a constant length.</t>
+
+        <t>When an NTP client is started, it SHOULD send the first request to
+          the alternative port. The client SHOULD be switching between the two
+          ports until a valid response is received. The client MAY send a
+          limited number of requests to both ports at the same time in order to
+          speed up the discovery of the responding port. When both ports are
+          responding, the client SHOULD prefer the alternative port.</t>
+
+        <t>An NTP server which supports NTS SHOULD include the NTPv4 Port
+          Negotiation record in NTS-KE responses to specify the alternative
+          port as the port to which the client should send NTP requests.</t>
+
+        <t>In the symmetric modes (active and passive) NTP packets are
+          considered to be requests and responses at the same time. Therefore,
+          the peers MUST send packets with an equal length in order to
+          synchronize with each other. The peers MAY use different polling
+          intervals (packets sent at subsequent polls are considered to be
+          separate requests and responses).</t>
+      </list></t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate a (system?) UDP/TCP port.</t>
+      <t>IANA is requested to allocate the following port in the <xref
+        target="RFC6335">Service Name and Transport Protocol Port Number
+        Registry</xref>:</t>
+      <t><list>
+        <t>Service Name: ntp-alt</t>
+        <t>Transport Protocol: udp</t>
+        <t>Assignee: IESG &lt;iesg@ietf.org&gt;</t>
+        <t>Contact: IETF Chair &lt;chair@ietf.org&gt;</t>
+        <t>Description: Network Time Protocol</t>
+        <t>Reference: [[this memo]]</t>
+        <t>Port Number: [[TBD]], selected by IANA from the System Port
+          range</t>
+      </list></t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>A Man-in-the-middle (MITM) attacker can selectively block requests
+        sent to the alternative port to force a client to select the original
+        port and get a degraded NTP service with a significant packet loss. The
+        client needs to periodically try the alternative port to recover from
+        the degraded service when the attack stops.</t>
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>The author would like to thank Daniel Franke and Ragnar Sundblad for
-        their useful comments.</t>
+      <t>The author would like to thank Daniel Franke, Dhruv Dhody, and Ragnar
+        Sundblad for their useful comments.</t>
     </section>
   </middle>
 
@@ -156,7 +218,11 @@
     <references title="Normative References">
       &RFC2119;
 
+      &RFC8174;
+
       &RFC5905;
+
+      &RFC6335;
 
     </references>
 

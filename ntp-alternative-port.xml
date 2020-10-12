@@ -172,7 +172,7 @@
         <t>An NTP server that supports the alternative port MUST receive
           requests in the client mode on both the PORT (123) and ALTPORT (TBD)
           ports. If it responds, it MUST send the response from the port which
-          received the request. If the server support an NTP extension field,
+          received the request. If the server supports an NTP extension field,
           it MUST verify for each response that it is not longer than the
           request.</t>
 

@@ -5,6 +5,7 @@
 <!ENTITY RFC5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC5906 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5906.xml">
 <!ENTITY RFC6335 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6335.xml">
+<!ENTITY RFC8633 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8633.xml">
 <!ENTITY RFC8915 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8915.xml">
 <!ENTITY MODE6 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-mode-6-cmds.xml">
 ]>
@@ -76,9 +77,10 @@
       <t>The modes 6 and 7 of NTP allow significant traffic amplification,
         which has been exploited in large-scale DoS attacks on the Internet.
         Publicly accessible servers that support these modes need to be
-        configured to not respond to requests using the modes, but the number
-        of servers that still do that is significant enough to require
-        specific mitigations.</t>
+        configured to not respond to requests using the modes, as recommended
+        in <xref target="RFC8633">BCP 233</xref>, but the number of
+        servers that still do that is significant enough to require specific
+        mitigations.</t>
 
       <t>Over time, network operators have been observed to implement the
         following mitigations:</t>
@@ -103,8 +105,10 @@
         which uses extension fields in NTPv4 packets.</t>
 
       <t>This document specifies an alternative port for NTP which is
-        restricted to the safe modes in order to enable synchronization of
-        clocks in networks where the port 123 is blocked or rate limited.</t>
+        restricted to a subset of the NTP protocol which does not allow
+        amplification in order to enable safe synchronization of clocks in
+        networks where the port 123 is blocked or rate limited.
+      </t>
 
       <section title="Requirements Language">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -185,10 +189,10 @@
 
         <t>In the symmetric modes (active and passive) NTP packets are
           considered to be requests and responses at the same time. Therefore,
-          the peers MUST send packets with an equal length in order to
-          synchronize with each other. The peers MAY use different polling
-          intervals (packets sent at subsequent polls are considered to be
-          separate requests and responses).</t>
+          two peers using the alternative port MUST send packets with an equal
+          length in order to synchronize with each other. The peers MAY still
+          use different polling intervals as packets sent at subsequent polls
+          are considered to be separate requests and responses.</t>
       </list></t>
     </section>
 
@@ -236,6 +240,8 @@
 
     <references title="Informative References">
       &RFC5906;
+
+      &RFC8633;
 
       &RFC8915;
 

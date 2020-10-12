@@ -66,12 +66,19 @@
 
       <t>The first group of modes typically does not allow any traffic
         amplification, i.e. the response is not larger than the request. An
-        exception is Autokey specified in <xref target="RFC5906">RFC
-          5906</xref>. Autokey is rarely supported on public NTP servers.</t>
+        exception is <xref target="RFC5906">Autokey</xref>, which allows an NTP
+        response to be longer than the request, e.g. packets containing the
+        Certificate Message or Cookie Message extension field. Autokey is
+        rarely used. If it is enabled on a publicly accessible server, the
+        access needs to be tightly controlled to limit denial-of-service
+        (DoS) attacks exploiting the amplification.</t>
 
-      <t>However, the modes 6 and 7 allow significant traffic amplification,
-        which has been exploited in large-scale denial-of-service (DoS) attacks
-        over the Internet.</t>
+      <t>The modes 6 and 7 of NTP allow significant traffic amplification,
+        which has been exploited in large-scale DoS attacks on the Internet.
+        Publicly accessible servers that support these modes need to be
+        configured to not respond to requests using the modes, but the number
+        of servers that still do that is significant enough to require
+        specific mitigations.</t>
 
       <t>Over time, network operators have been observed to implement the
         following mitigations:</t>
@@ -91,8 +98,9 @@
       <t>The number of public servers in the pool.ntp.org project has dropped
         in large part due to the mitigations (citation?).</t>
 
-      <t>Longer NTP packets (using extension fields) are needed by <xref
-         target="RFC8915">NTS</xref>.</t>
+      <t>The length-specific filtering and rate limiting has an impact on the
+        Network Time Security <xref target="RFC8915">NTS</xref> authentication,
+        which uses extension fields in NTPv4 packets.</t>
 
       <t>This document specifies an alternative port for NTP which is
         restricted to the safe modes in order to enable synchronization of
@@ -157,12 +165,12 @@
         <t>Only modes 1 (active), 2 (passive), 3 (client), 4 (server), and 5
           (broadcast) are generally usable on this port.</t>
 
-        <t>An NTP server SHOULD receive requests in the client mode on both the
-          PORT (123) and ALTPORT (TBD) ports. If it responds, it MUST send the
-          response from the port which received the request. If the server
-          supports any extension fields in NTP packets, it MUST verify that
-          each response is not larger than the request, even if the number of
-          extension fields is constant and they have a constant length.</t>
+        <t>An NTP server that supports the alternative port MUST receive
+          requests in the client mode on both the PORT (123) and ALTPORT (TBD)
+          ports. If it responds, it MUST send the response from the port which
+          received the request. If the server support an NTP extension field,
+          it MUST verify for each response that it is not longer than the
+          request.</t>
 
         <t>When an NTP client is started, it SHOULD send the first request to
           the alternative port. The client SHOULD be switching between the two

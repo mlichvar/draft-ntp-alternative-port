@@ -5,8 +5,8 @@
 <!ENTITY RFC5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC5906 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5906.xml">
 <!ENTITY RFC6335 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6335.xml">
+<!ENTITY RFC8915 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8915.xml">
 <!ENTITY MODE6 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-mode-6-cmds.xml">
-<!ENTITY NTS SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-using-nts-for-ntp.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <?rfc strict="yes"?>
@@ -92,7 +92,7 @@
         in large part due to the mitigations (citation?).</t>
 
       <t>Longer NTP packets (using extension fields) are needed by <xref
-        target="I-D.ietf-ntp-using-nts-for-ntp">NTS</xref>.</t>
+         target="RFC8915">NTS</xref>.</t>
 
       <t>This document specifies an alternative port for NTP which is
         restricted to the safe modes in order to enable synchronization of
@@ -229,9 +229,9 @@
     <references title="Informative References">
       &RFC5906;
 
-      &MODE6;
+      &RFC8915;
 
-      &NTS;
+      &MODE6;
 
     </references>
   </back>

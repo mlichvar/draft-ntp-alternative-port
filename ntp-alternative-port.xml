@@ -101,7 +101,7 @@
         in large part due to the mitigations (citation?).</t>
 
       <t>The length-specific filtering and rate limiting has an impact on the
-        Network Time Security <xref target="RFC8915">NTS</xref> authentication,
+        <xref target="RFC8915">Network Time Security</xref> authentication,
         which uses extension fields in NTPv4 packets.</t>
 
       <t>This document specifies an alternative port for NTP which is

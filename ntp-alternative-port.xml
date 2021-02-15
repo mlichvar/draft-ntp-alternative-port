@@ -47,9 +47,7 @@
     <abstract>
       <t>This document updates RFC 5905 to specify an alternative port for the
         Network Time Protocol (NTP) which is restricted to NTP messages that do
-        not allow traffic amplification in order to make NTP safe for the
-        Internet.
-      </t>
+        not allow traffic amplification.</t>
     </abstract>
   </front>
 
@@ -82,8 +80,9 @@
         servers that still do that is significant enough to require specific
         mitigations.</t>
 
-      <t>Over time, network operators have been observed to implement the
-        following mitigations:</t>
+      <t>Network operators have implemented different mitigations. They are
+        not documented and may change over time. Some of the mitigations that
+        have been observed are:</t>
 
       <t><list style="numbers">
           <t>Blocked UDP packets with destination or source port 123</t>
@@ -95,10 +94,11 @@
       </list></t>
 
       <t>From those, only the 3rd approach does not have an impact on
-        synchronization of clocks with NTP.</t>
+        synchronization of clocks with NTP. However, this mitigation can be
+        implemented only on devices which can inspect the UDP payload.</t>
 
       <t>The number of public servers in the pool.ntp.org project has dropped
-        in large part due to the mitigations (citation?).</t>
+        since 2013, when the large-scale attacks started.</t>
 
       <t>The length-specific filtering and rate limiting has an impact on the
         <xref target="RFC8915">Network Time Security</xref> authentication,
@@ -177,7 +177,7 @@
           request.</t>
 
         <t>When an NTP client is started, it SHOULD send the first request to
-          the alternative port. The client SHOULD be switching between the two
+          the alternative port. The client SHOULD alternate between the two
           ports until a valid response is received. The client MAY send a
           limited number of requests to both ports at the same time in order to
           speed up the discovery of the responding port. When both ports are
@@ -221,8 +221,8 @@
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>The author would like to thank Daniel Franke, Dhruv Dhody, and Ragnar
-        Sundblad for their useful comments.</t>
+      <t>The author would like to thank Daniel Franke, Dhruv Dhody, Ragnar
+        Sundblad, and Steven Sommars for their useful comments.</t>
     </section>
   </middle>
 

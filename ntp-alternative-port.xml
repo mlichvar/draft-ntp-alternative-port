@@ -76,7 +76,7 @@
         which has been exploited in large-scale DoS attacks on the Internet.
         Publicly accessible servers that support these modes need to be
         configured to not respond to requests using the modes, as recommended
-        in <xref target="RFC8633">BCP 233</xref>, but the number of
+        in <xref target="RFC8633">BCP 223</xref>, but the number of
         servers that still do that is significant enough to require specific
         mitigations.</t>
 
